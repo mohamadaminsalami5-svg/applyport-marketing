@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>ApplyPort – تقویم محتوای ۳۰ روزه</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      direction: rtl;
+    }
+
+    #app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+      width: 260px;
+      border-left: 1px solid #1f2937;
+      background: #020617;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-block {
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid #1f2937;
+    }
+
+    .logo-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f9fafb;
+    }
+
+    .logo-sub {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #6b7280;
+      padding: 12px 18px 4px;
+    }
+
+    .channel-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 8px 8px;
+    }
+
+    .channel-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 6px 10px;
+      margin-bottom: 4px;
+      background: transparent;
+      color: #e5e7eb;
+      cursor: pointer;
+      transition: 0.15s ease-out;
+      text-align: right;
+    }
+
+    .channel-item:hover {
+      background: #020617;
+      border-color: #1f2937;
+    }
+
+    .channel-item--active {
+      background: #0f172a;
+      border-color: #38bdf8;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.6);
+    }
+
+    .channel-color-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      margin-left: 6px;
+    }
+
+    .channel-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .channel-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .channel-handle {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .sidebar-footer {
+      border-top: 1px solid #1f2937;
+      padding: 10px 14px 14px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .sidebar-footer .hint {
+      margin-top: 4px;
+      color: #6b7280;
+    }
+
+    .add-channel-box {
+      border-top: 1px solid #1f2937;
+      padding: 8px 14px 10px;
+      font-size: 11px;
+    }
+
+    .add-channel-box input,
+    .add-channel-box select {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      font-size: 11px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 5px 7px;
+      outline: none;
+    }
+
+    .add-channel-box button {
+      width: 100%;
+      border-radius: 999px;
+      background: #38bdf8;
+      border: none;
+      color: #020617;
+      padding: 6px 0;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .add-channel-box button:hover {
+      filter: brightness(1.05);
+    }
+
+    /* Main */
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid #1f2937;
+      backdrop-filter: blur(18px);
+      background: rgba(15, 23, 42, 0.82);
+    }
+
+    .header-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #6b7280;
+    }
+
+    .header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+
+    .header-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #38bdf8;
+      background: rgba(15, 23, 42, 0.7);
+      color: #bfdbfe;
+    }
+
+    .header-sub {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 10px;
+    }
+
+    .stat-box {
+      min-width: 80px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #1f2937;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+
+    .body {
+      display: grid;
+      grid-template-columns: 2.1fr 1.1fr;
+      gap: 14px;
+      padding: 14px 18px 18px;
+    }
+
+    /* Calendar */
+
+    .calendar-card {
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid #1f2937;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.8);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .calendar-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid #1f2937;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      color: #e5e7eb;
+    }
+
+    .calendar-sub {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .calendar-table-wrapper {
+      overflow: auto;
+      max-height: calc(100vh - 190px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    thead {
+      background: #020617;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    th,
+    td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #111827;
+      text-align: right;
+    }
+
+    th {
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    .row {
+      cursor: pointer;
+      transition: background 0.12s ease-out;
+    }
+
+    .row:hover {
+      background: #020617;
+    }
+
+    .row--active {
+      background: #0f172a;
+    }
+
+    .muted {
+      color: #6b7280;
+    }
+
+    /* Editor */
+
+    .editor-card {
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #1f2937;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.8);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .editor-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .editor-sub {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .clear-btn {
+      background: #111827;
+      border: 1px solid #374151;
+      color: #9ca3af;
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+
+    .clear-btn:hover {
+      background: #1f2937;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-row label {
+      font-size: 11px;
+      color: #d1d5db;
+    }
+
+    .form-row input,
+    .form-row select {
+      font-size: 11px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 6px 8px;
+      outline: none;
+    }
+
+    .form-row input:focus,
+    .form-row select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+    }
+
+    .editor-hint {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 900px) {
+      #app {
+        flex-direction: column-reverse;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .body {
+        grid-template-columns: 1fr;
+      }
+
+      .calendar-table-wrapper {
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- این اسکریپت ماژول، مستقیم به Firebase وصل می‌شود -->
+<script type="module">
+  /* ----------------- Firebase setup ----------------- */
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    onSnapshot,
+  } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+  // ⚠️ اگر بعداً پروژه عوض شد این config را از کنسول Firebase کپی کن
+  const firebaseConfig = {
+    apiKey: "AIzaSyCBLE8RNu_vRORSZZed1JNs6K1jvuVxWQI",
+    authDomain: "applyport-marketing.firebaseapp.com",
+    projectId: "applyport-marketing",
+    storageBucket: "applyport-marketing.firebasestorage.app",
+    messagingSenderId: "779133356040",
+    appId: "1:779133356040:web:c3d699020278a211dbe9bd",
+    measurementId: "G-R3KTR3ZWHB",
+  };
+
+  const appFB = initializeApp(firebaseConfig);
+  const db = getFirestore(appFB);
+
+  // یک داکیومنت مشترک برای همهٔ تیم
+  const stateDocRef = doc(db, "calendars", "applyport-main");
+
+  /* ----------------- تنظیمات پایه ----------------- */
+
+  const CHANNELS_DEFAULT = [
+    {
+      id: "instagram",
+      name: "Instagram",
+      handle: "@applyport",
+      platform: "Instagram",
+      color: "#E1306C",
+    },
+    {
+      id: "tiktok",
+      name: "TikTok",
+      handle: "@applyport.tiktok",
+      platform: "TikTok",
+      color: "#000000",
+    },
+    {
+      id: "youtube",
+      name: "YouTube",
+      handle: "ApplyPort Channel",
+      platform: "YouTube",
+      color: "#FF0000",
+    },
+    {
+      id: "telegram",
+      name: "Telegram",
+      handle: "@applyport_channel",
+      platform: "Telegram",
+      color: "#26A5E4",
+    },
+    {
+      id: "linkedin",
+      name: "LinkedIn",
+      handle: "ApplyPort",
+      platform: "LinkedIn",
+      color: "#0A66C2",
+    },
+  ];
+
+  const STATUS_OPTIONS = [
+    { value: "idea", label: "ایده" },
+    { value: "ready", label: "آماده ضبط" },
+    { value: "editing", label: "در حال تدوین" },
+    { value: "published", label: "منتشر شده" },
+  ];
+
+  const TYPE_OPTIONS = [
+    { value: "reel", label: "Reel / کلیپ عمودی" },
+    { value: "post", label: "Post / کاروسل" },
+    { value: "story", label: "Story / استوری" },
+    { value: "short", label: "YouTube Short" },
+    { value: "live", label: "Live / لایو" },
+  ];
+
+  function generate30Days() {
+    const days = [];
+    const now = new Date();
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() + i);
+      const iso = d.toISOString().slice(0, 10);
+      days.push({
+        day: i + 1,
+        date: iso,
+        type: "",
+        title: "",
+        status: "idea",
+      });
+    }
+    return days;
+  }
+
+  function createDefaultState() {
+    const channels = CHANNELS_DEFAULT;
+    const plans = {};
+    channels.forEach((ch) => {
+      plans[ch.id] = generate30Days();
+    });
+
+    return {
+      channels,
+      plans,
+      selectedChannelId: channels[0]?.id || null,
+      selectedDay: 1,
+    };
+  }
+
+  let state = null;
+  let isInitializing = true;
+
+  async function loadStateFromFirestore() {
+    try {
+      const snap = await getDoc(stateDocRef);
+      if (snap.exists()) {
+        return snap.data();
+      } else {
+        const initial = createDefaultState();
+        await setDoc(stateDocRef, initial);
+        return initial;
+      }
+    } catch (e) {
+      console.error("Error loading from Firestore:", e);
+      // اگر خطا بود، حداقل روی مرورگر کار کنه
+      return createDefaultState();
+    }
+  }
+
+  async function saveStateToFirestore() {
+    if (!state) return;
+    try {
+      await setDoc(stateDocRef, state);
+    } catch (e) {
+      console.error("Error saving to Firestore:", e);
+    }
+  }
+
+  function getCurrentChannel() {
+    return state.channels.find((c) => c.id === state.selectedChannelId) || null;
+  }
+
+  function getCurrentPlan() {
+    const ch = getCurrentChannel();
+    if (!ch) return [];
+    return state.plans[ch.id] || [];
+  }
+
+  function getSelectedDay() {
+    const plan = getCurrentPlan();
+    return plan.find((d) => d.day === state.selectedDay) || null;
+  }
+
+  function statusLabel(value) {
+    const found = STATUS_OPTIONS.find((s) => s.value === value);
+    return found ? found.label : "";
+  }
+
+  function typeLabel(value) {
+    const found = TYPE_OPTIONS.find((t) => t.value === value);
+    return found ? found.label : "";
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  /* ----------------- اکشن‌ها ----------------- */
+
+  function selectChannel(id) {
+    if (!state) return;
+    state.selectedChannelId = id;
+    state.selectedDay = 1;
+    saveStateToFirestore();
+    render();
+  }
+
+  function selectDay(dayNumber) {
+    if (!state) return;
+    state.selectedDay = dayNumber;
+    saveStateToFirestore();
+    render();
+  }
+
+  function updateDayField(field, value) {
+    if (!state) return;
+    const channel = getCurrentChannel();
+    if (!channel) return;
+
+    const plan = state.plans[channel.id];
+    const idx = plan.findIndex((d) => d.day === state.selectedDay);
+    if (idx === -1) return;
+
+    plan[idx][field] = value;
+    saveStateToFirestore();
+    render();
+  }
+
+  function clearSelectedDay() {
+    if (!state) return;
+    const channel = getCurrentChannel();
+    if (!channel) return;
+    if (!confirm("این روز خالی شود؟")) return;
+    const plan = getCurrentPlan().slice();
+    const idx = plan.findIndex((d) => d.day === state.selectedDay);
+    if (idx === -1) return;
+    plan[idx] = { ...plan[idx], type: "", title: "", status: "idea" };
+    state.plans[channel.id] = plan;
+    saveStateToFirestore();
+    render();
+  }
+
+  function addChannelFromForm() {
+    if (!state) return;
+    const nameInput = document.getElementById("newChannelName");
+    const handleInput = document.getElementById("newChannelHandle");
+    const platformSelect = document.getElementById("newChannelPlatform");
+
+    const name = nameInput.value.trim();
+    const handle = handleInput.value.trim();
+    const platform = platformSelect.value;
+
+    if (!name) {
+      alert("اسم کانال را بنویس");
+      return;
+    }
+
+    const id = "ch_" + Date.now();
+    const colors = {
+      Instagram: "#E1306C",
+      TikTok: "#000000",
+      YouTube: "#FF0000",
+      Telegram: "#26A5E4",
+      LinkedIn: "#0A66C2",
+      Other: "#22c55e",
+    };
+
+    const newChannel = {
+      id,
+      name,
+      handle: handle || name,
+      platform,
+      color: colors[platform] || "#22c55e",
+    };
+
+    state.channels = [...state.channels, newChannel];
+    state.plans[id] = generate30Days();
+    state.selectedChannelId = id;
+    state.selectedDay = 1;
+
+    nameInput.value = "";
+    handleInput.value = "";
+
+    saveStateToFirestore();
+    render();
+  }
+
+  /* ----------------- رندر ----------------- */
+
+  function render() {
+    if (!state) return;
+    const app = document.getElementById("app");
+    const channel = getCurrentChannel();
+    const plan = getCurrentPlan();
+    const selectedDay = getSelectedDay();
+
+    const totalPlanned = plan.filter((d) => (d.title || "").trim() !== "").length;
+    const totalPublished = plan.filter((d) => d.status === "published").length;
+
+    const channelListHtml = state.channels
+      .map((ch) => {
+        const active = ch.id === state.selectedChannelId;
+        return `
+        <button class="channel-item ${
+          active ? "channel-item--active" : ""
+        }" onclick="selectChannel('${ch.id}')">
+          <div class="channel-color-dot" style="background:${ch.color}"></div>
+          <div class="channel-text">
+            <div class="channel-name">${escapeHtml(ch.name)}</div>
+            <div class="channel-handle">${escapeHtml(ch.handle)}</div>
+          </div>
+        </button>
+      `;
+      })
+      .join("");
+
+    const rowsHtml = plan
+      .map((day) => {
+        return `
+        <tr class="row ${
+          day.day === state.selectedDay ? "row--active" : ""
+        }" onclick="selectDay(${day.day})">
+          <td>${day.day}</td>
+          <td>${day.date}</td>
+          <td>${typeLabel(day.type) || "—"}</td>
+          <td>${
+            day.title
+              ? escapeHtml(day.title)
+              : '<span class="muted">(ایده خالی)</span>'
+          }</td>
+          <td>${statusLabel(day.status)}</td>
+        </tr>
+      `;
+      })
+      .join("");
+
+    let editorHtml = "";
+    if (selectedDay) {
+      editorHtml = `
+        <form class="form" onsubmit="return false;">
+          <div class="form-row">
+            <label>نوع محتوا</label>
+            <select onchange="updateDayField('type', this.value)">
+              <option value="">انتخاب کن</option>
+              ${TYPE_OPTIONS.map(
+                (t) => `
+                <option value="${t.value}" ${
+                  t.value === selectedDay.type ? "selected" : ""
+                }>${t.label}</option>
+              `
+              ).join("")}
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>عنوان / ایده اصلی</label>
+            <input
+  type="text"
+  value="${selectedDay.title || ""}"
+  placeholder="مثلاً: Reel معرفی ApplyPort برای دانشجویان ایرانی"
+  oninput="updateDayField('title', this.value)"
+/>
+          </div>
+
+          <div class="form-row">
+            <label>وضعیت</label>
+            <select onchange="updateDayField('status', this.value)">
+              ${STATUS_OPTIONS.map(
+                (s) => `
+                <option value="${s.value}" ${
+                  s.value === selectedDay.status ? "selected" : ""
+                }>${s.label}</option>
+              `
+              ).join("")}
+            </select>
+          </div>
+        </form>
+      `;
+    } else {
+      editorHtml = `<div class="muted">از جدول سمت چپ یک روز را انتخاب کن.</div>`;
+    }
+
+    app.innerHTML = `
+      <div class="main">
+        <header class="header">
+          <div>
+            <div class="header-label">Channel</div>
+            <div class="header-title-row">
+              <div class="header-title">
+                ${
+                  channel
+                    ? escapeHtml(channel.name)
+                    : "ابتدا یک کانال انتخاب کن"
+                }
+              </div>
+              ${
+                channel
+                  ? `<span class="header-badge">${escapeHtml(
+                      channel.platform
+                    )} · ${escapeHtml(channel.handle)}</span>`
+                  : ""
+              }
+            </div>
+            <div class="header-sub">
+              تقویم ۳۰ روزه برای همه کانال‌های ApplyPort – ادمین هر روز فقط نگاه می‌کند و می‌فهمد چی باید پست شود.
+            </div>
+          </div>
+          <div class="header-stats">
+            <div class="stat-box">
+              <div class="stat-label">برنامه‌ریزی شده</div>
+              <div class="stat-value">${totalPlanned}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">منتشر شده</div>
+              <div class="stat-value">${totalPublished}</div>
+            </div>
+          </div>
+        </header>
+
+        <section class="body">
+          <div class="calendar-card">
+            <div class="calendar-header">
+              <div>تقویم ۳۰ روز آینده</div>
+              <div class="calendar-sub">
+                روی هر روز کلیک کن، نوع محتوا و ایده و وضعیت را تنظیم کن.
+              </div>
+            </div>
+            <div class="calendar-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>روز</th>
+                    <th>تاریخ</th>
+                    <th>نوع محتوا</th>
+                    <th>عنوان / ایده</th>
+                    <th>وضعیت</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="editor-card">
+            <div class="editor-header">
+              <div>
+                <div class="editor-title">جزئیات روز انتخاب شده</div>
+                ${
+                  selectedDay
+                    ? `<div class="editor-sub">روز ${selectedDay.day} · ${selectedDay.date}</div>`
+                    : ""
+                }
+              </div>
+              <button class="clear-btn" onclick="clearSelectedDay()">خالی کردن این روز</button>
+            </div>
+            ${editorHtml}
+          </div>
+        </section>
+      </div>
+
+      <aside class="sidebar">
+        <div class="logo-block">
+          <div class="logo-title">ApplyPort</div>
+          <div class="logo-sub"> تقویم محتوای ۳۰ روزه · Social CRM </div>
+        </div>
+
+        <div class="sidebar-section-title">کانال‌ها</div>
+        <div class="channel-list">
+          ${channelListHtml}
+        </div>
+
+        <div class="add-channel-box">
+          <div style="margin-bottom:4px;">اضافه کردن کانال جدید</div>
+          <input id="newChannelName" type="text" placeholder="مثلاً: Instagram فارسی" />
+          <input id="newChannelHandle" type="text" placeholder="@applyport.fa (اختیاری)" />
+          <select id="newChannelPlatform">
+            <option value="Instagram">Instagram</option>
+            <option value="TikTok">TikTok</option>
+            <option value="YouTube">YouTube</option>
+            <option value="Telegram">Telegram</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Other">Other / سایر</option>
+          </select>
+          <button onclick="addChannelFromForm()">+ افزودن کانال</button>
+        </div>
+
+        <div class="sidebar-footer">
+          <div>دیتای این تقویم به صورت مشترک در Firebase ذخیره می‌شود.</div>
+          <div class="hint">هر تغییری که تو، فرزاد یا حمید بدید، برای بقیه هم دیده می‌شود.</div>
+        </div>
+      </aside>
+    `;
+  }
+
+  /* ----------------- init & realtime ----------------- */
+
+  async function init() {
+    state = await loadStateFromFirestore();
+    render();
+
+    // ریِل‌تایم: اگر یکی از بچه‌ها چیزی عوض کرد، بقیه هم ببینن
+    onSnapshot(stateDocRef, (snap) => {
+      if (!snap.exists()) return;
+      const data = snap.data();
+      // اگر در حال init هستیم یا تازه خودمون سیو کردیم، باز هم رندر مشکلی ندارد
+      state = data;
+      render();
+    });
+  }
+
+  // توابع را روی window می‌گذاریم برای onclick ها
+  window.selectChannel = selectChannel;
+  window.selectDay = selectDay;
+  window.updateDayField = updateDayField;
+  window.clearSelectedDay = clearSelectedDay;
+  window.addChannelFromForm = addChannelFromForm;
+
+  window.addEventListener("load", init);
+</script>
+</body>
+</html>
+
